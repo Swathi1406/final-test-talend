@@ -1,0 +1,49 @@
+# PROD Environment Configuration (YODA context)
+# Based on Talend YODA context
+
+sftp:
+  host: "172.24.9.41"
+  port: 22
+  user: "yoda_uat"
+  password: "![encrypted_password]" # Use secure properties
+  privateKeyPath: "~/.ssh/id_rsa"
+  privateKeyPassphrase: "![encrypted_passphrase]"
+  remotePath: "/yoda_uat/workday/receber/"
+  fileMask: "Absentismo*.csv"
+  
+file:
+  inputSeparator: ";"
+  outputSeparator: ","
+  headerLines: 1
+  footerLines: 0
+  encoding: "UTF-8"
+  
+folders:
+  root: "/opt/talend_data/"
+  in: "in/"
+  temp: "temp/"
+  out: "out/"
+  archives: "archives/"
+  resources: "resources/"
+  
+encryption:
+  enabled: false
+  decryptionKey: "![encrypted_key]"
+  publicKeyFile: "Workday_Global_secret-key-4A43A68D.asc"
+  secretKeyFile: "Workday_SecretKey.asc"
+  
+output:
+  filePrefix: "Absences_Auchan_"
+  oracleApiUrl: "https://objectstorage.eu-frankfurt-1.oraclecloud.com/p/2Zip5rj8QitQVLoV99Dm1Tu5mg3V2Bd9-1wGXqQ_xLRfZuSw6BoxV-fxXYh853lE/n/fri2r0ljsgtn/b/AuchanIntegration01/o/"
+  
+googleDrive:
+  serviceAccountFile: "datapool-prt-rpa-prod-e71078c9218d.json"
+  workdayFolderId: "19qWu61dM9i4GrkDMMcqkWWe6qYmwOHGb"
+  tlanticFolderId: "1mNI4P1Vz7nJjJnvOCLjFAWCwfyNAFI_l"
+  
+archive:
+  retentionDays: 7
+  
+scheduler:
+  frequency: "0 0 2 * * ?" # Run at 2 AM daily
+  timezone: "Europe/Lisbon"
