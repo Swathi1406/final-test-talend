@@ -1,24 +1,6 @@
-ERROR 2026-02-07 15:53:02,020 [[MuleRuntime].uber.08: [only-decryption].only-decryptionFlow.CPU_INTENSIVE @786482b9] [processor: ; event: fadfa4d0-040e-11f1-a3a8-c2bfbebee544] org.mule.runtime.core.privileged.exception.DefaultExceptionListener: 
-********************************************************************************
-Message               : "You called the function 'read' with these arguments: 
-  1: Array ([{"MOT_APP_ID;EMPLOYEE_ID;START_DATE;END_DATE;STATUS": "2072;9001538;2026/12/...)
-  2: String ("application/csv")
-  3: Object ({separator: ";",header: true})
+""Cannot coerce Boolean (true) to Number
 
-But it expects arguments of these types:
-  1: String | Binary
-  2: String
-  3: Object
-
-
-5| var rows = read(payload, "application/csv", {
-              ^^^^
+23|     (($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0") as Number)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Trace:
-  at main (line: 5, column: 12)" evaluating expression: "
-%dw 2.0
-import * from dw::core::Strings
-output application/csv header=true
-var rows = read(payload, "application/csv", {
-  separator: ";",
-  header: true
-})
+  at main (line: 23, column: 6)" evaluating expression: 
