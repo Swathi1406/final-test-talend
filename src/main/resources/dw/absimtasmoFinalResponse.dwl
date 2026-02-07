@@ -1,20 +1,18 @@
 
 %dw 2.0
-import mule from dw::Mule
 import * from dw::core::Strings
-import * from dw::core::Streams
 output application/csv header=true
 var rows = read(payload, "application/csv", {
-  separator: (mule::p('file.inputSeparator') as String),
+  separator: ";",
   header: true
 })
 fun getMOT_APP_ID(r) =
   if (!isEmpty(r.MOT_AP_ID_Licenca)) 
-    r.MOT_AP_ID_Licenca trim()[0 to 4]
+    trim(r.MOT_AP_ID_Licenca)[0 to 4]
   else if (!isEmpty(r.MOT_AP_ID_Ferias))
-    if ((r.MOT_AP_ID_Ferias trim()[0 to 1]) == "F") "2072" else r.MOT_AP_ID_Ferias
+    if ((trim(r.MOT_AP_ID_Ferias)[0 to 1]) == "F") "2072" else r.MOT_AP_ID_Ferias
   else if (!isEmpty(r.MOT_AP_ID_Time_off)) 
-    r.MOT_AP_ID_Time_off trim()[0 to 4]
+    trim(r.MOT_AP_ID_Time_off)[0 to 4]
   else ""
 
 fun parseAbsenceDate(d) = (d as Date {format: "yyyy/MM/dd"})
