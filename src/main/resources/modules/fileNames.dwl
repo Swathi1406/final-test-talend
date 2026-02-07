@@ -5,8 +5,8 @@ fun buildFileNames(flowKey) =
     var cfg      = readUrl("classpath://flows.json", "application/json")
     var entry    = cfg.flows[flowKey] default {}
     var ext      = (cfg.extension default ".csv") as String
-    var yyyyMMdd = (now() as Date     { format: "yyyyMMdd" })
-    var stamp    = (now() as DateTime { format: "yyyyMMddHHmmss" })
+    var yyyyMMdd = (now() as String { format: "yyyyMMdd" })
+    var stamp    = (now() as String { format: "yyyyMMddHHmmss" })
   ---
     if (isEmpty(entry)) 
       {
