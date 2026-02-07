@@ -75,16 +75,15 @@ else
 		<logger level="INFO" doc:name="Log Payload Size" message="#[if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null']" />
 		<logger level="INFO" doc:name="Log First Row" message="#[if(payload != null and payload.size() > 0) 'First row Quantidade_Calculada_Horas: ' ++ payload[0].Quantidade_Calculada_Horas else 'No data']" />
 		<choice doc:name="PGP Optional">
-            <when expression="#[((vars.varConfig.EncryptionFlag) as Boolean)]">
+			<when expression="#[((vars.varConfig.EncryptionFlag) as Boolean)]">
 				<crypto:pgp-decrypt doc:name="Pgp decrypt" doc:id="58ed7b0c-84cc-472f-980a-ad818a138965" config-ref="Crypto_Pgp" />
-            </when>
-            <otherwise>
-                <logger level="INFO" message="PGP disabled"/>
-            </otherwise>
-        </choice>
-		<set-variable variableName="csvData" value="#[payload]" doc:name="csvData" doc:id="csv-store" />
-		<set-variable variableName="varMapping" value="#[readUrl('classpath://dw/' ++ vars.varConfig.dwlMappingFile, 'text/plain')]" doc:name="varMapping" doc:id="load-dwl" />
-		<set-payload value="#[vars.csvData]" doc:name="csvData" doc:id="csv-restore" />
+			</when>
+			<otherwise>
+				<logger level="INFO" message="PGP disabled"/>
+			</otherwise>
+		</choice>
+		<!-- Load mapping script and execute against current payload (CSV array) -->
+		<set-variable variableName="varMapping" value="#[readUrl('classpath://dw/' ++ vars.varConfig.dwlMappingFile, 'text/plain')]" doc:name="Load DWL Mapping" doc:id="load-dwl" />
 		<ee:dynamic-evaluate doc:name="Transform" doc:id="transform">
 			<ee:dynamic-content>#[vars.varMapping]</ee:dynamic-content>
 		</ee:dynamic-evaluate>
