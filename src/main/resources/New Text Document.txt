@@ -1,49 +1,24 @@
-' has errors: 
-	Unable to resolve reference of: `toStream`. at 24 : 1" evaluating expression: "%dw 2.0
+ERROR 2026-02-07 15:53:02,020 [[MuleRuntime].uber.08: [only-decryption].only-decryptionFlow.CPU_INTENSIVE @786482b9] [processor: ; event: fadfa4d0-040e-11f1-a3a8-c2bfbebee544] org.mule.runtime.core.privileged.exception.DefaultExceptionListener: 
+********************************************************************************
+Message               : "You called the function 'read' with these arguments: 
+  1: Array ([{"MOT_APP_ID;EMPLOYEE_ID;START_DATE;END_DATE;STATUS": "2072;9001538;2026/12/...)
+  2: String ("application/csv")
+  3: Object ({separator: ";",header: true})
+
+But it expects arguments of these types:
+  1: String | Binary
+  2: String
+  3: Object
+
+
+5| var rows = read(payload, "application/csv", {
+              ^^^^
+Trace:
+  at main (line: 5, column: 12)" evaluating expression: "
+%dw 2.0
 import * from dw::core::Strings
 output application/csv header=true
 var rows = read(payload, "application/csv", {
   separator: ";",
   header: true
 })
-fun getMOT_APP_ID(r) =
-  if (!isEmpty(r.MOT_AP_ID_Licenca)) 
-    trim(r.MOT_AP_ID_Licenca)[0 to 4]
-  else if (!isEmpty(r.MOT_AP_ID_Ferias))
-    if ((trim(r.MOT_AP_ID_Ferias)[0 to 1]) == "F") "2072" else r.MOT_AP_ID_Ferias
-  else if (!isEmpty(r.MOT_AP_ID_Time_off)) 
-    trim(r.MOT_AP_ID_Time_off)[0 to 4]
-  else ""
-
-fun parseAbsenceDate(d) = (d as Date {format: "yyyy/MM/dd"})
-fun parseLeaveDate(d)   = (d as Date {format: "yyyy-MM-dd"})
-fun getStatus(a) =
-  if (isEmpty(a)) ""
-  else if (lower(trim(a)) == "corrigido") "X"
-  else ""
----
-toStream(rows)
-  filter (
-    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0.0)
-    and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))
-  )
-  map {
-    MOT_APP_ID:  getMOT_APP_ID($),
-    EMPLOYEE_ID: $.Employee_ID,
-    START_DATE:  if (!isEmpty($.First_Day_of_Leave))
-                    parseLeaveDate($.First_Day_of_Leave) as String {format: "yyyy-MM-dd"}
-                 else 
-                    parseAbsenceDate($.Absence_Date) as String {format: "yyyy-MM-dd"},
-    END_DATE:    if (!isEmpty($.Last_Day_of_Leave))
-                    parseLeaveDate($.Last_Day_of_Leave) as String {format: "yyyy-MM-dd"}
-                 else 
-                    parseAbsenceDate($.Absence_Date) as String {format: "yyyy-MM-dd"},
-    STATUS:      getStatus($.Accao)
-  }".
-Element               : Common_Yoda_Sub_Flow/processors/5 @ only-decryption:only-decryption.xml:84 (Dynamic Evaluate)
-Element DSL           : <ee:dynamic-evaluate doc:name="Dynamic Evaluate" doc:id="b7decf80-2053-457d-8735-d4dc7695e434" expression="#[vars.varMapping]"></ee:dynamic-evaluate>
-Error type            : MULE:EXPRESSION
-FlowStack             : at Common_Yoda_Sub_Flow(Common_Yoda_Sub_Flow/processors/5 @ only-decryption:only-decryption.xml:84 (Dynamic Evaluate))
-at only-decryptionFlow(only-decryptionFlow/processors/1 @ only-decryption:only-decryption.xml:25 (Common Yoda Flow Reference))
-
-  (set debug level logging or '-Dmule.verbose.exceptions=true' for everything)
