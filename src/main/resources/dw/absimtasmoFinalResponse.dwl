@@ -21,7 +21,7 @@ fun getStatus(a) =
 ---
 payload
   filter (
-    (($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0") as Number)
+    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0")
     and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))
   )
   map {
