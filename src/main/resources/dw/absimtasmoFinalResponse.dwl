@@ -2,10 +2,7 @@
 %dw 2.0
 import * from dw::core::Strings
 output application/csv header=true
-var rows = read(payload, "application/csv", {
-  separator: ";",
-  header: true
-})
+
 fun getMOT_APP_ID(r) =
   if (!isEmpty(r.MOT_AP_ID_Licenca)) 
     trim(r.MOT_AP_ID_Licenca)[0 to 4]
@@ -22,9 +19,9 @@ fun getStatus(a) =
   else if (lower(trim(a)) == "corrigido") "X"
   else ""
 ---
-rows
+payload
   filter (
-    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0.0)
+    (($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0") as Number)
     and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))
   )
   map {
