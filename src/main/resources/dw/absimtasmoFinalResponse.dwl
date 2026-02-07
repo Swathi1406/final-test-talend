@@ -2,6 +2,22 @@
 %dw 2.0
 import * from dw::core::Strings
 output application/csv header=true
+
+fun getMOT_APP_ID(r) =
+  if (!isEmpty(r.MOT_AP_ID_Licenca)) 
+    trim(r.MOT_AP_ID_Licenca)[0 to 4]
+  else if (!isEmpty(r.MOT_AP_ID_Ferias))
+    if ((trim(r.MOT_AP_ID_Ferias)[0 to 1]) == "F") "2072" else r.MOT_AP_ID_Ferias
+  else if (!isEmpty(r.MOT_AP_ID_Time_off)) 
+    trim(r.MOT_AP_ID_Time_off)[0 to 4]
+  else ""
+
+fun parseAbsenceDate(d) = (d as Date {format: "yyyy/MM/dd"})
+fun parseLeaveDate(d)   = (d as Date {format: "yyyy-MM-dd"})
+fun getStatus(a) =
+  if (isEmpty(a)) ""
+  else if (lower(trim(a)) == "corrigido") "X"
+  else ""
 ---
 payload
   filter (
@@ -21,19 +37,3 @@ payload
                     parseAbsenceDate($.Absence_Date) as String {format: "yyyy-MM-dd"},
     STATUS:      getStatus($.Accao)
   }
-
-fun getMOT_APP_ID(r) =
-  if (!isEmpty(r.MOT_AP_ID_Licenca)) 
-    trim(r.MOT_AP_ID_Licenca)[0 to 4]
-  else if (!isEmpty(r.MOT_AP_ID_Ferias))
-    if ((trim(r.MOT_AP_ID_Ferias)[0 to 1]) == "F") "2072" else r.MOT_AP_ID_Ferias
-  else if (!isEmpty(r.MOT_AP_ID_Time_off)) 
-    trim(r.MOT_AP_ID_Time_off)[0 to 4]
-  else ""
-
-fun parseAbsenceDate(d) = (d as Date {format: "yyyy/MM/dd"})
-fun parseLeaveDate(d)   = (d as Date {format: "yyyy-MM-dd"})
-fun getStatus(a) =
-  if (isEmpty(a)) ""
-  else if (lower(trim(a)) == "corrigido") "X"
-  else ""
