@@ -45,7 +45,26 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<ee:transform doc:name="Build Input/Output Filenames" doc:id="25329565-c569-4d59-9d11-cfb59d64aa71" >
 			<ee:message />
 			<ee:variables >
-				<ee:set-variable resource="dw/varConfig.dwl" variableName="varConfig" />
+				<ee:set-variable variableName="varConfig" ><![CDATA[%dw 2.0
+output application/json
+var cfg = readUrl("classpath://flows.json", "application/json")
+var entry = cfg.flows[vars.varFlowName] default {}
+var ext = (cfg.extension default ".csv") as String
+var yyyyMMdd = (now() as String { format: "yyyyMMdd" })
+var stamp = (now() as String { format: "yyyyMMddHHmmss" })
+---
+if (isEmpty(entry)) 
+  {
+    error: "Unknown flow key",
+    flowKey: vars.varFlowName
+  }
+else
+  {
+    SFTPInputFileName: (entry.inputPrefix default "") ++ yyyyMMdd ++ ext,
+    OutputFileName: (entry.outputPrefix default "") ++ yyyyMMdd ++ "_" ++ stamp ++ ext,
+    EncryptionFlag: (entry.encryptionFlag default false),
+    dwlMappingFile: (entry.dwlMappingFile default "")
+  }]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>
 		<try doc:name="Try" doc:id="541c5e34-eb46-470f-9f27-b4cb4f3ea222" >

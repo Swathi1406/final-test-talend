@@ -1,5 +1,5 @@
 %dw 2.0
 import fn from modules::fileNames
-output application/java
+output application/json
 ---
 fn::buildFileNames(vars.varFlowName)
