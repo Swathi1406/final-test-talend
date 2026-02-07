@@ -76,15 +76,17 @@ else
 		<logger level="INFO" doc:name="Log First Row" message="#[if(payload != null and payload.size() > 0) 'First row Quantidade_Calculada_Horas: ' ++ payload[0].Quantidade_Calculada_Horas else 'No data']" />
 		<choice doc:name="PGP Optional">
             <when expression="#[((vars.varConfig.EncryptionFlag) as Boolean)]">
-                <logger level="INFO" message="#['Decrypting (PGP) ' ++ (vars.inputFileInfo.originalFileName default 'current file')]"/>
 				<crypto:pgp-decrypt doc:name="Pgp decrypt" doc:id="58ed7b0c-84cc-472f-980a-ad818a138965" config-ref="Crypto_Pgp" />
-            
-</when>
+            </when>
             <otherwise>
                 <logger level="INFO" message="PGP disabled"/>
             </otherwise>
         </choice>
-		<set-variable value="#[%dw 2.0&#10;output application/dw&#10;---&#10;readUrl(&quot;classpath://dw/&quot; ++ vars.varConfig.dwlMappingFile, 'text/plain')]" doc:name="Set Variable" doc:id="da9bda5f-5ebd-41a0-bf03-3541b5ee25ef" variableName="varMapping"/>
-		<ee:dynamic-evaluate doc:name="Dynamic Evaluate" doc:id="58cf3695-2132-44c4-9219-082b7d98a2c7" expression="#[vars.varMapping]"/>
+		<set-variable variableName="csvData" value="#[payload]" doc:name="csvData" doc:id="csv-store" />
+		<set-variable variableName="varMapping" value="#[readUrl('classpath://dw/' ++ vars.varConfig.dwlMappingFile, 'text/plain')]" doc:name="varMapping" doc:id="load-dwl" />
+		<set-payload value="#[vars.csvData]" doc:name="csvData" doc:id="csv-restore" />
+		<ee:dynamic-evaluate doc:name="Transform" doc:id="transform">
+			<ee:dynamic-content>#[vars.varMapping]</ee:dynamic-content>
+		</ee:dynamic-evaluate>
 	</sub-flow>
 </mule>
