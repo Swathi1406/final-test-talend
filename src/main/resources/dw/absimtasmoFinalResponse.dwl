@@ -22,7 +22,7 @@ fun getStatus(a) =
   else if (lower(trim(a)) == "corrigido") "X"
   else ""
 ---
-toStream(rows)
+rows
   filter (
     ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0.0)
     and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))
