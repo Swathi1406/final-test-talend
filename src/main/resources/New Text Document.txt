@@ -1,6 +1,10 @@
-""Cannot coerce Boolean (true) to Number
+Filters:
+Filter 1 (tFilterRow_9):
+Quantidade_Calculada_Horas == null OR Quantidade_Calculada_Horas == 0.0
 
-23|     (($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0") as Number)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Trace:
-  at main (line: 23, column: 6)" evaluating expression: 
+Keeps only rows with zero or null hours
+
+Filter 2 (tFilterRow_17):
+!(Absence_Date.isEmpty() AND First_Day_of_Leave.isEmpty() AND Last_Day_of_Leave.isEmpty())
+Removes rows where ALL THREE date fields are empty
+Must have AT LEAST ONE date field populated

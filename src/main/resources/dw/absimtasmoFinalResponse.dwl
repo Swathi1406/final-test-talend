@@ -20,11 +20,7 @@ fun getStatus(a) =
 ---
 payload
   filter (
-<<<<<<< Updated upstream
-    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0")
-=======
-    (($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0 or $.Quantidade_Calculada_Horas == "0"))
->>>>>>> Stashed changes
+    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0.0)
     and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))
   )
   map {
