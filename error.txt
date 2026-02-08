@@ -1,28 +1,56 @@
-ERROR 2026-02-08 10:47:29,036 [[MuleRuntime].uber.08: [only-decryption].only-decryptionFlow.BLOCKING @da1bf9f] [processor: Common_Yoda_Sub_Flow/processors/3; event: 76508dc0-04ad-11f1-ab68-c2bfbebee544] org.mule.runtime.core.privileged.exception.DefaultExceptionListener: 
+ERROR 2026-02-08 10:56:24,884 [[MuleRuntime].uber.08: [only-decryption].only-decryptionFlow.CPU_INTENSIVE @443c5fa0] [processor: ; event: b5ea0730-04ae-11f1-ab68-c2bfbebee544] org.mule.runtime.core.privileged.exception.DefaultExceptionListener: 
 ********************************************************************************
-Message               : "You called the function '++' with these arguments: 
-  1: String ("Payload size: ")
-  2: Null (null)
-
-But it expects one of these combinations:
-  (Array, Array)
-  (Date, Time)
-  (Date, LocalTime)
-  (Date, TimeZone)
-  (LocalDateTime, TimeZone)
-  (LocalTime, Date)
-  (LocalTime, TimeZone)
-  (Object, Object)
-  (String, String)
-  (Time, Date)
-  (TimeZone, LocalDateTime)
-  (TimeZone, Date)
-  (TimeZone, LocalTime)
-
-1| if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null'
-                                        ^^
-Trace:
-  at main (line: 1, column: 38)" evaluating expression: "if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null'".
-Element               : Common_Yoda_Sub_Flow/processors/3 @ only-decryption:only-decryption.xml:58 (Log Payload Size)
-Element DSL           : <logger level="INFO" doc:name="Log Payload Size" message="#[if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null']"></logger>
+Message               : "Script '%dw 2.0
+import * from dw::core::Strings
+output application/csv header=true
+var script = readUrl("classpath://dw/" ++ vars.varConfig.dwlMappingFile)
+var cleaned =
+	(script splitBy "\n")
+		filter ((line) -> not (
+			startsWith(line, "%dw") or
+			startsWith(line, "output") or
+			(trim(line) == "---")
+		))
+		joinBy "\n"
+---
+eval(cleaned)' has errors: 
+	Unable to resolve reference of: `eval`. at 14 : 1" evaluating expression: "#[%dw 2.0
+import * from dw::core::Strings
+output application/csv header=true
+var script = readUrl("classpath://dw/" ++ vars.varConfig.dwlMappingFile)
+var cleaned =
+	(script splitBy "\n")
+		filter ((line) -> not (
+			startsWith(line, "%dw") or
+			startsWith(line, "output") or
+			(trim(line) == "---")
+		))
+		joinBy "\n"
+---
+eval(cleaned)]".
+Element               : Common_Yoda_Sub_Flow/processors/6 @ only-decryption:only-decryption.xml:70 (Dynamic Transform)
+Element DSL           : <ee:transform doc:name="Dynamic Transform" doc:id="88949677-c4ed-4744-9b28-d41d59ab2ce5">
+<ee:message>
+<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
+output application/csv header=true
+var script = readUrl("classpath://dw/" ++ vars.varConfig.dwlMappingFile)
+var cleaned =
+	(script splitBy "\n")
+		filter ((line) -> not (
+			startsWith(line, "%dw") or
+			startsWith(line, "output") or
+			(trim(line) == "---")
+		))
+		joinBy "\n"
+---
+eval(cleaned)]]></ee:set-payload>
+</ee:message>
+</ee:transform>
 Error type            : MULE:EXPRESSION
+FlowStack             : at Common_Yoda_Sub_Flow(Common_Yoda_Sub_Flow/processors/6 @ only-decryption:only-decryption.xml:70 (Dynamic Transform))
+at only-decryptionFlow(only-decryptionFlow/processors/1 @ only-decryption:only-decryption.xml:25 (Common Yoda Flow Reference))
+
+  (set debug level logging or '-Dmule.verbose.exceptions=true' for everything)
+
+
