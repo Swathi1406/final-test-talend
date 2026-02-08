@@ -1,0 +1,28 @@
+ERROR 2026-02-08 10:47:29,036 [[MuleRuntime].uber.08: [only-decryption].only-decryptionFlow.BLOCKING @da1bf9f] [processor: Common_Yoda_Sub_Flow/processors/3; event: 76508dc0-04ad-11f1-ab68-c2bfbebee544] org.mule.runtime.core.privileged.exception.DefaultExceptionListener: 
+********************************************************************************
+Message               : "You called the function '++' with these arguments: 
+  1: String ("Payload size: ")
+  2: Null (null)
+
+But it expects one of these combinations:
+  (Array, Array)
+  (Date, Time)
+  (Date, LocalTime)
+  (Date, TimeZone)
+  (LocalDateTime, TimeZone)
+  (LocalTime, Date)
+  (LocalTime, TimeZone)
+  (Object, Object)
+  (String, String)
+  (Time, Date)
+  (TimeZone, LocalDateTime)
+  (TimeZone, Date)
+  (TimeZone, LocalTime)
+
+1| if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null'
+                                        ^^
+Trace:
+  at main (line: 1, column: 38)" evaluating expression: "if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null'".
+Element               : Common_Yoda_Sub_Flow/processors/3 @ only-decryption:only-decryption.xml:58 (Log Payload Size)
+Element DSL           : <logger level="INFO" doc:name="Log Payload Size" message="#[if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null']"></logger>
+Error type            : MULE:EXPRESSION
