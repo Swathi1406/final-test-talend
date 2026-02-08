@@ -82,13 +82,24 @@ else
 				<logger level="INFO" message="PGP disabled"/>
 			</otherwise>
 		</choice>
-		<!-- Dynamic transformation - loads DWL file and executes it -->
+		<!-- Dynamic transformation - loads DWL file, strips header/output and executes it -->
 		<ee:transform doc:name="Dynamic Transform" doc:id="transform">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
+import * from dw::core::Strings
 output application/csv header=true
+var script = readUrl("classpath://dw/" ++ vars.varConfig.dwlMappingFile)
+var cleaned =
+	(script splitBy "\n")
+		filter ((line) -> not (
+			startsWith(line, "%dw") or
+			startsWith(line, "output") or
+			(trim(line) == "---")
+		))
+		joinBy "\n"
 ---
-eval(readUrl("classpath://dw/" ++ vars.varConfig.dwlMappingFile))]]></ee:set-payload>
+eval(cleaned)
+]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Log Final Payload Size" message="#[if(payload != null) 'Final payload size: ' ++ payload.size() else 'Final payload is null']" />
