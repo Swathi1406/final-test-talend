@@ -72,7 +72,7 @@ else
 		<try doc:name="Try" doc:id="541c5e34-eb46-470f-9f27-b4cb4f3ea222" >
 			<file:read doc:name="Read" doc:id="b2998a60-7bf8-4883-bbb5-6f7b347565ac" config-ref="File_Config" path="test_data.csv" outputMimeType="application/csv" />
 		</try>
-		<logger level="INFO" doc:name="Log Payload Size" message="#[if(payload != null) 'Payload size: ' ++ payload.size() else 'Payload is null']" />
+		<logger level="INFO" doc:name="Log Payload Size" message="#[if(payload != null) 'Payload size: ' ++ ((payload.size()) default 0) as String else 'Payload is null']" />
 		<logger level="DEBUG" doc:name="Log Payload Sample" message="#[write(payload, 'application/json')]" />
 		<choice doc:name="PGP Optional">
 			<when expression="#[((vars.varConfig.EncryptionFlag) as Boolean)]">
@@ -97,11 +97,10 @@ var cleaned =
 			(trim(line) == "---")
 		))
 		joinBy "\n"
----
 eval(cleaned)
 ]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<logger level="INFO" doc:name="Log Final Payload Size" message="#[if(payload != null) 'Final payload size: ' ++ payload.size() else 'Final payload is null']" />
+		<logger level="INFO" doc:name="Log Final Payload Size" message="#[if(payload != null) 'Final payload size: ' ++ ((payload.size()) default 0) as String else 'Final payload is null']" />
 	</sub-flow>
 </mule>
