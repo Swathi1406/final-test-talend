@@ -1,89 +1,123 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:crypto="http://www.mulesoft.org/schema/mule/crypto"
-	xmlns:file="http://www.mulesoft.org/schema/mule/file"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
-http://www.mulesoft.org/schema/mule/crypto http://www.mulesoft.org/schema/mule/crypto/current/mule-crypto.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d5de60d3-175f-4668-8703-6795627f90ca" >
-		<http:listener-connection host="localhost" port="8081" />
-	</http:listener-config>
-	<file:config name="File_Config" doc:name="File Config" doc:id="3fc0cc4a-4c8d-466e-8793-2af0bc4b747a">
-		<file:connection workingDir="${mule.home}/src/main/resources" />
-	</file:config>
-	<crypto:pgp-config name="Crypto_Pgp" doc:name="Crypto Pgp" doc:id="c4236fc5-1b93-4937-9150-beb3ece7d647" publicKeyring="keys/Workday_Global_secret-key-4A43A68D.asc" privateKeyring="keys/Workday_SecretKey.asc">
-		<crypto:pgp-key-infos >
-			<crypto:pgp-asymmetric-key-info keyId="workday-key" fingerprint="9B5E3D3A829DB57420C526B825FBB8844A43A68D" passphrase="7ae79ba0483a999b6d5eb502ad884d6c61c1c5a5ac4fcbbb089de20d6a22ad18" />
-		</crypto:pgp-key-infos>
-	</crypto:pgp-config>
-	<configuration-properties doc:name="Configuration properties" doc:id="6b3646a3-ea17-4744-a9a2-8dcccfdfd7c6" file="properties\dev.properties" />
-	<flow name="only-decryptionFlow" doc:id="fcee3424-9201-4a8d-9a82-67c98ee2f33b" >
-		<http:listener doc:name="Listener" doc:id="4cba1749-5c49-4bd9-a7c3-c14a2078ad42" config-ref="HTTP_Listener_config" path="/"/>
+vars.varConfig response (mediaType: application/json):
+{
+  "SFTPInputFileName": "Absentismo20260208.csv",
+  "OutputFileName": "Absences_Auchan_20260208_20260208111416.csv",
+  "EncryptionFlag": false,
+  "dwlMappingFile": "absimtasmoFinalResponse.dwl"
+}
 
 
-<set-variable value="PRT_WFM_PRT_Absentismo" doc:name="varFlowName" doc:id="963d871b-5526-4c2c-8011-e2903609ece2" variableName="varFlowName" />
-		<flow-ref doc:name="Common Yoda Flow Reference" doc:id="33d33a76-dcae-4102-a4ae-969bd416346e" name="Common_Yoda_Sub_Flow" />
-		<!-- <ee:transform doc:name="Build Filenames">
-  <ee:message>
-    <ee:set-payload><![CDATA[
-      %dw 2.0
-      import fn from modules::filenames
-      output application/java
-      -&#45;&#45;
-      fn::buildFileNames(vars.varFlowName)
-    ]]></ee:set-payload>
-  </ee:message>
-</ee:transform>
+Read file Response (mediaType: text/csv):
+Employee_ID;Quantity;Absence_Date;First_Day_of_Leave;Last_Day_of_Leave;Accao;MOT_AP_ID_Licenca;MOT_AP_ID_Ferias;MOT_AP_ID_Time_off;Quantidade_Calculada_Horas
+9313385;-4;2026/12/31;;;Corrigido;;;2104;0
+9313385;-0.75;2026/12/31;;;Corrigido;;;2104;0
+9231801;1;2026/12/31;;;Gerado;;Férias;;0
+9231801;1;2026/12/29;;;Gerado;;Férias;;0
+9230951;1;2026/12/28;;;Gerado;;Férias;;0
+9308600;;;2026-01-19;2026-02-17;Gerado;2396;;;0
+9254127;0;2026/12/31;;;Gerado;;Férias;;0
+9313385;0;2026/12/30;;;Corrigido;;;2104;0
+9243804;0;2026/01/19;;;Gerado;;;2513;0
+0160751;0;2026/01/23;;;Gerado;;Férias;;0
+9305092;0;2026/01/17;2026-01-17;2026-01-17;Gerado;;Férias;;0
+9312742;0;2026/01/19;;;Corrigido;;;2104;0
+9309766;0;2026/01/16;;;Gerado;;Férias;;0
+9307078;0;2026/01/23;;;Gerado;;Férias;;0
+9301370;0;2026/01/15;;;Gerado;;;2513;0
+9301123;0;2026/01/20;;;Gerado;;Férias;;0
+9313268;;;2026-01-23;2026-06-17;Gerado;2166;;;0
+9251648;0;2026/01/23;;;Gerado;;;2513;0
+9256009;0;2026/01/19;;;Gerado;;;2513;0
+9258958;0;2026/01/20;;;Gerado;;;2069;0
+9306555;0;2026/01/21;;;Gerado;;Férias;;0
+9304834;0;2026/01/22;;;Gerado;;;2513;0
+9308744;0;2026/01/21;;;Gerado;;Férias;;0
+9311640;0;2026/01/20;;;Gerado;;;2069;0
+0122645;0;2026/01/23;;;Gerado;;;2069;0
+9237503;0;2026/01/06;;;Corrigido;;;2104;0
+0320922;0;2026/01/05;;;Corrigido;;;2104;0
+0160269;0;2026/01/04;;;Gerado;;;2513;0
+9310403;0;2025/12/31;;;Gerado;;;2069;0
+9249074;0;2025/12/26;;;Gerado;;;2077;0
+9254127;0;2025/12/31;;;Gerado;;;2513;0
+9313014;0;2025/12/22;;;Gerado;;;2104;0
+9315303;0;2025/11/21;;;Gerado;;;2077;0
+9315303;0;2025/11/14;;;Gerado;;;2077;0
+9313519;0;2025/10/20;;;Gerado;;;2077;0
+9309055;0;2025/07/30;;;Corrigido;;;HF;0
+9253342;0;2025/07/27;;;Gerado;;;2069;0
+9254127;0;2026/01/12;;;Gerado;;;2513;0
 
 
-		<file:read doc:name="Read" doc:id="991ecd7a-658c-4ab0-b065-b80022f3db08" path="C:\Users\swmuthya\Talend\Source Files-20260127T121840Z-3-001\Source Files\Carga_Horaria20260125.csv" config-ref="File_Config"/>
-		<crypto:pgp-decrypt doc:name="Pgp decrypt" doc:id="d1429cdf-3f98-4b60-948b-e53c603de737" config-ref="Crypto_Pgp"/> -->
-		<logger level="INFO" doc:name="Job complete logger" doc:id="0d68e418-5d73-43ad-ab3b-c6d84b1dcc51" message="scheduler job completed successfully" />
-	</flow>
-	<sub-flow name="Common_Yoda_Sub_Flow" doc:id="506b4062-0333-4fdd-a4bc-f0c2c9a33c38" >
-		<logger level="INFO" doc:name="Logger" doc:id="c9158aba-b8fa-4b9c-9cb8-724651c9fa35" />
-		<ee:transform doc:name="Build Input/Output Filenames" doc:id="25329565-c569-4d59-9d11-cfb59d64aa71" >
-			<ee:message />
-			<ee:variables >
-				<ee:set-variable variableName="varConfig" ><![CDATA[%dw 2.0
-output application/json
-var cfg = readUrl("classpath://flows.json", "application/json")
-var entry = cfg.flows[vars.varFlowName] default {}
-var ext = (cfg.extension default ".csv") as String
-var yyyyMMdd = (now() as String { format: "yyyyMMdd" })
-var stamp = (now() as String { format: "yyyyMMddHHmmss" })
+vars.varMapping (mediaType: application/json):
+"%dw 2.0\nimport * from dw::core::Strings\n\nfun getMOT_APP_ID(r) =\n  if (!isEmpty(r.MOT_AP_ID_Licenca)) \n    trim(r.MOT_AP_ID_Licenca)[0 to 4]\n  else if (!isEmpty(r.MOT_AP_ID_Ferias))\n    if ((trim(r.MOT_AP_ID_Ferias)[0 to 1]) == \"F\") \"2072\" else r.MOT_AP_ID_Ferias\n  else if (!isEmpty(r.MOT_AP_ID_Time_off)) \n    trim(r.MOT_AP_ID_Time_off)[0 to 4]\n  else \"\"\n\nfun parseAbsenceDate(d) = (d as Date {format: \"yyyy/MM/dd\"})\nfun parseLeaveDate(d)   = (d as Date {format: \"yyyy-MM-dd\"})\nfun getStatus(a) =\n  if (isEmpty(a)) \"\"\n  else if (lower(trim(a)) == \"corrigido\") \"X\"\n  else \"\"\n---\npayload\n  filter (\n    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0.0)\n    and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))\n  )\n  map {\n    MOT_APP_ID:  getMOT_APP_ID($),\n    EMPLOYEE_ID: $.Employee_ID,\n    START_DATE:  if (!isEmpty($.First_Day_of_Leave))\n                    parseLeaveDate($.First_Day_of_Leave) as String {format: \"yyyy-MM-dd\"}\n                 else \n                    parseAbsenceDate($.Absence_Date) as String {format: \"yyyy-MM-dd\"},\n    END_DATE:    if (!isEmpty($.Last_Day_of_Leave))\n                    parseLeaveDate($.Last_Day_of_Leave) as String {format: \"yyyy-MM-dd\"}\n                 else \n                    parseAbsenceDate($.Absence_Date) as String {format: \"yyyy-MM-dd\"},\n    STATUS:      getStatus($.Accao)\n  }"
+
+
+
+when read file outputmimetype:application/csv
+final dwl : empty payload 
+
+
+failing : final dwl when READ file (outputmimetype:application/octet-stream and text/plain)
+
+""You called the function 'Value Selector' with these arguments: 
+  1: String ("E")
+  2: Name ("Quantidade_Calculada_Horas")
+
+But it expects one of these combinations:
+  (Array, Name)
+  (Array, String)
+  (Date, Name)
+  (DateTime, Name)
+  (LocalDateTime, Name)
+  (LocalTime, Name)
+  (Object, Name)
+  (Object, String)
+  (Period, Name)
+  (Time, Name)
+Trace:
+  at criteria (Unknown)
+  at dw::Core::reduce (line: 2501, column: 9)
+  at dw::Core::filter (line: 2500, column: 11)
+  at filter (line: 21, column: 3)
+  at map (line: 21, column: 3)
+  at main (line: 25, column: 3)" evaluating expression: "%dw 2.0
+import * from dw::core::Strings
+
+fun getMOT_APP_ID(r) =
+  if (!isEmpty(r.MOT_AP_ID_Licenca)) 
+    trim(r.MOT_AP_ID_Licenca)[0 to 4]
+  else if (!isEmpty(r.MOT_AP_ID_Ferias))
+    if ((trim(r.MOT_AP_ID_Ferias)[0 to 1]) == "F") "2072" else r.MOT_AP_ID_Ferias
+  else if (!isEmpty(r.MOT_AP_ID_Time_off)) 
+    trim(r.MOT_AP_ID_Time_off)[0 to 4]
+  else ""
+
+fun parseAbsenceDate(d) = (d as Date {format: "yyyy/MM/dd"})
+fun parseLeaveDate(d)   = (d as Date {format: "yyyy-MM-dd"})
+fun getStatus(a) =
+  if (isEmpty(a)) ""
+  else if (lower(trim(a)) == "corrigido") "X"
+  else ""
 ---
-if (isEmpty(entry)) 
-  {
-    error: "Unknown flow key",
-    flowKey: vars.varFlowName
-  }
-else
-  {
-    SFTPInputFileName: (entry.inputPrefix default "") ++ yyyyMMdd ++ ext,
-    OutputFileName: (entry.outputPrefix default "") ++ yyyyMMdd ++ "_" ++ stamp ++ ext,
-    EncryptionFlag: (entry.encryptionFlag default false),
-    dwlMappingFile: (entry.dwlMappingFile default "")
-  }]]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
-		<try doc:name="Try" doc:id="541c5e34-eb46-470f-9f27-b4cb4f3ea222" >
-			<file:read doc:name="Read" doc:id="b2998a60-7bf8-4883-bbb5-6f7b347565ac" config-ref="File_Config" path="test_data.csv" outputMimeType="application/csv" />
-		</try>
-		<logger level="INFO" doc:name="Log Payload Size" message="#[if(payload != null) 'Payload size: ' ++ ((payload.size()) default 0) as String else 'Payload is null']" />
-		<logger level="DEBUG" doc:name="Log Payload Sample" message="#[write(payload, 'application/json')]" />
-		<choice doc:name="PGP Optional">
-			<when expression="#[((vars.varConfig.EncryptionFlag) as Boolean)]">
-				<crypto:pgp-decrypt doc:name="Pgp decrypt" doc:id="58ed7b0c-84cc-472f-980a-ad818a138965" config-ref="Crypto_Pgp" />
-			</when>
-			<otherwise>
-				<logger level="INFO" message="PGP disabled"/>
-			</otherwise>
-		</choice>
-		<set-variable value="#[readUrl('classpath://dw/' ++ vars.varConfig.dwlMappingFile, 'text/plain')]" doc:name="Set Variable" doc:id="fda1bd10-03ad-433f-9825-5c8ffc51a7c0" variableName="varMapping"/>
-		<ee:dynamic-evaluate doc:name="Dynamic Evaluate" doc:id="061d66f3-4aa9-4f1a-b2f6-e9eba0c586e0" expression="#[vars.varMapping]"/>
-		<logger level="INFO" doc:name="Log Final Payload Size" message="#[if(payload != null) 'Final payload size: ' ++ ((payload.size()) default 0) as String else 'Final payload is null']" />
-	</sub-flow>
-</mule>
+payload
+  filter (
+    ($.Quantidade_Calculada_Horas == null or $.Quantidade_Calculada_Horas == 0.0)
+    and !(isEmpty($.Absence_Date) and isEmpty($.First_Day_of_Leave) and isEmpty($.Last_Day_of_Leave))
+  )
+  map {
+    MOT_APP_ID:  getMOT_APP_ID($),
+    EMPLOYEE_ID: $.Employee_ID,
+    START_DATE:  if (!isEmpty($.First_Day_of_Leave))
+                    parseLeaveDate($.First_Day_of_Leave) as String {format: "yyyy-MM-dd"}
+                 else 
+                    parseAbsenceDate($.Absence_Date) as String {format: "yyyy-MM-dd"},
+    END_DATE:    if (!isEmpty($.Last_Day_of_Leave))
+                    parseLeaveDate($.Last_Day_of_Leave) as String {format: "yyyy-MM-dd"}
+                 else 
+                    parseAbsenceDate($.Absence_Date) as String {format: "yyyy-MM-dd"},
+    STATUS:      getStatus($.Accao)
+  }". [Not accessible. Value obtained from method: getDetailedDescription()]"
+
+
+ 
