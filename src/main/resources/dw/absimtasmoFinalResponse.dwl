@@ -1,6 +1,5 @@
 %dw 2.0
 import * from dw::core::Strings
-output application/csv header=true
 
 fun getMOT_APP_ID(r) =
   if (!isEmpty(r.MOT_AP_ID_Licenca)) 
